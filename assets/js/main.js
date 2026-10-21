@@ -2,9 +2,8 @@
 document.documentElement.lang = 'he';
 document.documentElement.dir = 'rtl';
 
-/* ================= Rooms: real photos, in the order set by the firm's brief ================= */
 const ROOMS = [
-  { img: 'office', dim: .06, fx: .70, fy: .42, name: 'לשכת השותף' },
+  { img: 'office', dim: .06, fx: .70, fy: .42, name: 'המשרד' },
   { img: 'conference', dim: .16, fx: .53, fy: .44, name: 'חדר הישיבות' },
   { img: 'meeting', dim: .24, fx: .78, fy: .40, name: 'חדר הצוות' },
   { img: 'desk', dim: .26, fx: .45, fy: .55, name: 'שולחן התיקים' },
@@ -29,7 +28,6 @@ function measure() {
 measure();
 addEventListener('resize', measure);
 
-/* ================= Camera driven by scroll ================= */
 const rooms = [...document.querySelectorAll('.room')];
 const panels = rooms.map(r => r.querySelector('.panel'));
 const railLinks = [...document.querySelectorAll('.rail [data-i]')];
@@ -95,7 +93,8 @@ function render() {
 
   panels.forEach((p, j) => {
     const d = cam - j;
-    const o = d >= 0 ? 1 - Math.max(0, (d - CREEP) / (1 - CREEP)) * 1.6 : 1 + d * 1.5;
+    // full clarity holds a little longer on each side of the room's peak moment, then fades as before
+    const o = d >= 0 ? 1 - Math.max(0, (d - CREEP) / (1 - CREEP) - .14) * 1.9 : 1 + Math.min(0, d + .12) * 1.9;
     p.style.opacity = Math.max(0, Math.min(1, o)).toFixed(3);
   });
   const near = Math.min(rooms.length - 1, Math.round(cam - CREEP / 2));
@@ -104,7 +103,6 @@ function render() {
     railLinks.forEach(a => a.classList.toggle('on', +a.dataset.i === near));
     where.textContent = ROOMS[near].name;
   }
-  // the top nav follows section anchors, which are finer than rooms
   const probe = scrollY + innerHeight * .4;
   let act = anchors[0].id;
   anchors.forEach(el => { if (el && el.getBoundingClientRect().top + scrollY <= probe) act = el.id; });
@@ -113,9 +111,20 @@ function render() {
   ticks.forEach((tk, k) => tk.classList.toggle('lit', k < lit));
 }
 
+/* text that scrolls up toward the header fades out before it reaches it, so the two never overlap */
+const fadeEls = [...document.querySelectorAll('.about > div:first-child, .figures > div, .timeline li, .sec-head, .practice > li, .team-lead > .person, .team > li, .clients > li, .cases > li, .note, .contact > div:first-child > *, form.glass, footer')];
+function fadeNearTop() {
+  const edge = topbar.offsetHeight + 8;
+  for (const el of fadeEls) {
+    const t = el.getBoundingClientRect().top;
+    const o = Math.max(0, Math.min(1, (t - edge + 70) / 90));
+    el.style.opacity = o < 1 ? o.toFixed(3) : '';
+  }
+}
 const topbar = document.querySelector('.top');
 function loop() {
   topbar.classList.toggle('scrolled', scrollY > 40);
+  fadeNearTop();
   const target = targetCam();
   cam += (target - cam) * (reduce.matches ? 1 : .09);
   if (Math.abs(target - cam) < .0005) cam = target;
@@ -125,7 +134,6 @@ function loop() {
 render();
 requestAnimationFrame(loop);
 
-/* subtle parallax on the picture */
 const fine = matchMedia('(pointer: fine)');
 addEventListener('pointermove', e => {
   if (reduce.matches || !fine.matches) return;
@@ -133,7 +141,6 @@ addEventListener('pointermove', e => {
   world.style.transform = `translate3d(${(-mx * 16).toFixed(1)}px, ${(-my * 10).toFixed(1)}px, 0) scale(1.02)`;
 });
 
-/* ================= Dust in the light ================= */
 const cv = document.getElementById('dust'), cx = cv.getContext('2d');
 let CW = 0, CH = 0;
 const motes = Array.from({ length: 80 }, () => ({ x: Math.random(), y: Math.random(), r: .4 + Math.random() * 1.4, vx: (Math.random() - .5) * .00012, vy: -.00004 - Math.random() * .00012, p: Math.random() * 6.28 }));
@@ -154,7 +161,6 @@ function dust(ts) {
 }
 requestAnimationFrame(dust);
 
-/* ================= Form ================= */
 const form = document.getElementById('consult'), sent = document.getElementById('sent');
 form.addEventListener('submit', e => {
   e.preventDefault();
