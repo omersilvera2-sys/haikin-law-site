@@ -95,14 +95,15 @@ a{color:inherit}
 .btn-solid{background:var(--silver);color:var(--ink)}
 .btn-solid:hover{background:#fff}
 
-/* ---------- Room rail: bare numerals ---------- */
-.rail{position:fixed;inset-inline-start:max(var(--gutter), env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:14px;list-style:none;margin:0;padding:0}
-.rail a{display:flex;align-items:baseline;gap:14px;text-decoration:none;color:var(--mist)}
-.rail .num{min-width:28px;font:400 1rem/1 var(--f-display);color:var(--mist);transition:color .45s,font-size .45s var(--ease)}
-.rail .lbl{font-size:.875rem;transition:font-size .45s var(--ease),color .45s;white-space:nowrap}
-.rail a.on .num{font-size:1.6rem;color:var(--brass-text)}
-.rail a.on .lbl{font-family:var(--f-display);font-size:1.35rem;color:var(--silver)}
-.rail a:hover .lbl{color:var(--silver)}
+/* ---------- Room rail: dots, the room name shows on hover ---------- */
+.rail{position:fixed;inset-inline-start:max(var(--gutter), env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:18px;list-style:none;margin:0;padding:0}
+.rail a{position:relative;display:block;width:10px;height:10px;border-radius:50%;border:1px solid var(--mist);text-decoration:none;transition:background .4s,border-color .4s,transform .4s var(--ease)}
+.rail a::before{content:"";position:absolute;inset:-8px}
+.rail a.on{background:var(--brass-text);border-color:var(--brass-text);transform:scale(1.35)}
+.rail a:hover{border-color:var(--silver)}
+.rail .lbl{position:absolute;inset-inline-start:24px;top:50%;transform:translateY(-50%);font-size:.875rem;color:var(--silver);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s}
+.rail a.on .lbl{font-size:.65rem}
+.rail a:hover .lbl,.rail a:focus-visible .lbl{opacity:1}
 
 /* ---------- Progress ruler ---------- */
 body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(64px + env(safe-area-inset-bottom,0px));z-index:35;pointer-events:none;background:linear-gradient(0deg,rgba(13,22,29,.9),rgba(13,22,29,.55) 55%,rgba(13,22,29,0))}
@@ -120,7 +121,7 @@ main{position:relative;z-index:10;overflow-x:clip}
 .room.hero-room{min-height:165vh;padding-bottom:0}
 .panel{position:relative;padding-block:112px 40px;padding-left:max(var(--gutter), env(safe-area-inset-left,0px));padding-right:max(var(--gutter), env(safe-area-inset-right,0px))}
 .panel.stick{position:sticky;top:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-block:96px 130px}
-.panel-inner{width:100%;max-width:1360px;margin:0 auto;padding-inline-start:clamp(0px, 19vw, 300px)}
+.panel-inner{width:100%;max-width:1360px;margin:0 auto;padding-inline-start:clamp(0px, 6vw, 80px)}
 
 h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
 p{margin:0}
