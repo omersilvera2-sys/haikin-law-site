@@ -30,7 +30,6 @@ addEventListener('resize', measure);
 
 const rooms = [...document.querySelectorAll('.room')];
 const panels = rooms.map(r => r.querySelector('.panel'));
-const railLinks = [...document.querySelectorAll('.rail [data-i]')];
 const navLinks = [...document.querySelectorAll('.nav [data-a]')];
 const anchors = navLinks.map(a => document.getElementById(a.dataset.a));
 const where = document.getElementById('where');
@@ -100,7 +99,6 @@ function render() {
   const near = Math.min(rooms.length - 1, Math.round(cam - CREEP / 2));
   if (near !== shown) {
     shown = near;
-    railLinks.forEach(a => a.classList.toggle('on', +a.dataset.i === near));
     where.textContent = ROOMS[near].name;
   }
   const probe = scrollY + innerHeight * .4;
