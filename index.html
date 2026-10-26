@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Assistant:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=5">
+<link rel="stylesheet" href="assets/css/styles.css?v=10">
 </head>
 <body>
 <div dir="rtl" lang="he">
 <div class="stage" aria-hidden="true">
-  <div class="world" id="world"><div class="door" id="door"></div></div>
+  <div class="world" id="world"></div>
   <div class="sheen"></div>
   <canvas id="dust"></canvas>
   <div class="veil"></div>
@@ -41,14 +41,14 @@
 
 <div class="ruler" aria-hidden="true">
   <div class="ticks" id="ticksA"></div>
-  <div class="where" id="where">המשרד</div>
+  <div class="where" id="where">ראשי</div>
   <div class="ticks" id="ticksB"></div>
 </div>
 
 <main>
-  <!-- א׳ לשכת השותף המנהל -->
+  <!-- ראשי -->
   <section class="room hero-room" id="home" aria-label="ראשי">
-    <div class="panel stick"><div class="panel-inner">
+    <div class="panel"><div class="panel-inner">
       <div class="hero">
         <div class="stats">
           <div class="stat"><b class="num-ltr">40+</b><span>שנות ניסיון</span></div>
@@ -57,16 +57,21 @@
         <p class="hero-note">משרד עורכי דין ונוטריון המתמחה ברשויות מקומיות, מיסוי מוניציפלי ומשפט מנהלי.</p>
         <h1>מסורת משפטית של ארבעה עשורים, בגישה של היום</h1>
       </div>
-      <div class="hint"><i></i>גללו כדי להיכנס למשרד</div>
+      <a class="hint" href="#practice"><i></i>תחומי העיסוק, הצוות והתקדימים</a>
     </div></div>
+    <figure class="portrait">
+      <img src="assets/img/portrait-1600.webp"
+        srcset="assets/img/portrait-900.webp 900w, assets/img/portrait-1600.webp 1600w, assets/img/portrait-2400.webp 2400w, assets/img/portrait-3712.webp 3712w"
+        sizes="(max-width:1100px) 80vw, 40vw" width="3712" height="5508" alt="השותף המנהל במשרד חייקין ושות׳" fetchpriority="high" decoding="async">
+    </figure>
   </section>
 
-  <!-- ב׳ חדר הישיבות: אודות ותחומי עיסוק -->
+  <!-- תחומי עיסוק ואודות -->
   <section class="room" id="practice" aria-label="תחומי עיסוק ואודות">
     <div class="panel"><div class="panel-inner">
       <div class="block">
         <div class="sec-head">
-          <div><div class="eyebrow">חדר הישיבות</div><h2>תחומי עיסוק</h2></div>
+          <div><h2>תחומי עיסוק</h2></div>
           <p>ייצוג וייעוץ בכל ערכאות המשפט, מהשגה על חיוב ארנונה ועד עתירה לבג״ץ.</p>
         </div>
         <ol class="practice">
@@ -82,7 +87,7 @@
       <div class="block" id="about">
         <div class="about">
           <div>
-            <div class="eyebrow">אודות המשרד</div>
+            <h2 class="about-h">אודות המשרד</h2>
             <p class="lead">חייקין ושות׳ פועל למעלה מ־40 שנה בתחום הרשויות המקומיות, המיסוי המוניציפלי והמשפט המנהלי בישראל.</p>
             <p>המשרד משלב סמכותיות, ותק ומסורת משפטית עמוקה עם גישה מודרנית, נגישה וחדשנית. בעבר פעל המשרד תחת השמות ״חייקין דרור־לזר״ ו״חייקין״.</p>
           </div>
@@ -101,11 +106,11 @@
     </div></div>
   </section>
 
-  <!-- ג׳ חדר הצוות -->
+  <!-- הצוות -->
   <section class="room" id="team" aria-label="הצוות המשפטי">
     <div class="panel"><div class="panel-inner">
       <div class="sec-head">
-        <div><div class="eyebrow">חדר הצוות</div><h2>הצוות המשפטי והיועצים</h2></div>
+        <div><h2>הצוות המשפטי והיועצים</h2></div>
         <p>שותף מנהל, יועץ בכיר ששימש שופט, וצוות עורכי דין שכל אחד מהם מתמחה בתחום מוגדר.</p>
       </div>
       <div class="team-lead">
@@ -122,12 +127,12 @@
     </div></div>
   </section>
 
-  <!-- ד׳ שולחן התיקים: לקוחות ותקדימים -->
+  <!-- לקוחות ותקדימים -->
   <section class="room" id="precedents" aria-label="לקוחות ותקדימים">
     <div class="panel"><div class="panel-inner">
       <div class="block">
         <div class="sec-head">
-          <div><div class="eyebrow">שולחן התיקים</div><h2>למי אנחנו מעניקים שירות</h2></div>
+          <div><h2>למי אנחנו מעניקים שירות</h2></div>
         </div>
         <ul class="clients">
           <li><h3>רשויות מקומיות</h3><p>עיריות, מועצות מקומיות ומועצות אזוריות ברחבי הארץ. עיקר פעילות המשרד.</p></li>
@@ -155,13 +160,12 @@
     </div></div>
   </section>
 
-  <!-- ה׳ הקבלה: צור קשר -->
+  <!-- צור קשר -->
   <section class="room" id="contact" aria-label="צור קשר">
     <div class="panel"><div class="panel-inner">
       <div class="contact">
         <div>
-          <div class="eyebrow">הקבלה</div>
-          <h2>לתיאום פגישת ייעוץ</h2>
+                    <h2>לתיאום פגישת ייעוץ</h2>
           <p class="lead">פגישת ייעוץ ראשונה ללא עלות. ספרו לנו בקצרה במה מדובר, ונעשה את מירב המאמצים לחזור אליכם בהקדם.</p>
           <dl class="details">
             <div><dt>כתובת המשרד</dt><dd>מגדלי B.S.R 4, קומה 17, בני ברק<a class="maplink" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9E%D7%92%D7%93%D7%9C%D7%99+B.S.R+4+%D7%91%D7%A0%D7%99+%D7%91%D7%A8%D7%A7" target="_blank" rel="noopener">פתיחה ב־Google Maps
@@ -193,6 +197,6 @@
 </main>
 </div>
 
-<script src="assets/js/main.js?v=2" defer></script>
+<script src="assets/js/main.js?v=5" defer></script>
 </body>
 </html>

@@ -1,15 +1,16 @@
 # Haikin & Co. website (חייקין ושות׳)
 
 Static, Hebrew (RTL) one-page website for Haikin & Co., attorneys and notary.
-Scrolling walks the visitor through five rooms of the office (photo backgrounds with a doorway transition).
+One office photograph stays behind every section. The opening screen shows the managing partner's cut-out portrait,
+which slides in once on load; nothing animates on scroll.
 
 ## Structure
 
 ```
 index.html            page markup (RTL, lang="he")
 assets/css/styles.css all styles, including the readability layer over the photos
-assets/js/main.js     scroll "camera", dust animation, contact form
-assets/img/           room photos, full size + "-sm" versions for smaller screens
+assets/js/main.js     background photo, section indicator, portrait centring, dust animation, contact form
+assets/img/           office photos (full size + "-sm"), portrait-*.webp cut-out at 900/1600/2400/3712 px wide
 ```
 
 There is no backend and no build step. The contact form does not send data to any server:

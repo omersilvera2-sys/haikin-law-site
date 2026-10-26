@@ -5,8 +5,8 @@ body{margin:0;padding:0}
 img{max-width:100%}
 [hidden]:not([hidden=until-found i]){display:none!important}
 
-/* Layout: a fixed stage of real office photos behind transparent RTL content.
-   Each section is a room; scrolling walks the camera through a doorway into the next one.
+/* Layout: one fixed office photograph behind transparent RTL content.
+   Every section sits on the same room; scrolling moves the content only.
    Content sits directly on the photograph: no boxes, only type, hairlines and space. */
 :root{
   --ink:#0d161d;
@@ -41,11 +41,10 @@ a{color:inherit}
 /* ---------- Stage ---------- */
 .stage{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(120% 90% at 40% 30%, #3d5566 0%, #1a2731 55%, #0d161d 100%)}
 .world{position:absolute;inset:-2%;transform:translate3d(0,0,0) scale(1.02);transition:transform 1.2s var(--ease)}
-.scene{position:absolute;inset:0;visibility:hidden;--dim:0}
+.scene{position:absolute;inset:0;--dim:.16}
 .scene img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;display:block;animation:drift 26s ease-in-out infinite alternate}
 .scene::after{content:"";position:absolute;inset:0;background:#0b141a;opacity:var(--dim);pointer-events:none}
 @keyframes drift{from{transform:scale(1) translate3d(0,0,0)}to{transform:scale(1.07) translate3d(1.2%,-.6%,0)}}
-.door{position:absolute;z-index:3;border:1px solid rgba(226,236,242,.7);box-shadow:0 0 0 1px rgba(13,22,29,.35),0 0 60px rgba(226,236,242,.18);pointer-events:none;opacity:0}
 .sheen{position:absolute;inset:-20% -40%;pointer-events:none;mix-blend-mode:soft-light;
   background:repeating-linear-gradient(65deg, rgba(240,247,250,0) 0 9%, rgba(240,247,250,.22) 11%, rgba(240,247,250,0) 15% 24%);
   animation:sweep 14s ease-in-out infinite alternate}
@@ -62,14 +61,14 @@ a{color:inherit}
 /* ---------- Header ---------- */
 .top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding-block:20px;padding-left:max(var(--gutter), env(safe-area-inset-left,0px));padding-right:max(var(--gutter), env(safe-area-inset-right,0px));transition:padding .4s var(--ease)}
-/* once scrolling starts, a feathered haze settles behind the header: it darkens and blurs whatever passes beneath
-   (photo and text alike) and fades to nothing with no edge, so it reads as part of the room's own top shadow */
-.top::before{content:"";position:absolute;inset:0 0 -56px;z-index:-1;pointer-events:none;
-  background:linear-gradient(rgba(10,17,23,.42),rgba(10,17,23,.22) 55%,rgba(10,17,23,0));
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  -webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent);
-  opacity:0;transition:opacity .5s}
-.top.scrolled{padding-block:12px}
+/* once scrolling starts, a tinted, blurred band settles behind the header: it takes its colour from the photo
+   beneath it, so it blends with the room's own shadows, and its lower edge feathers away with no line */
+.top::before{content:"";position:absolute;inset:0 0 -32px;z-index:-1;pointer-events:none;
+  background:linear-gradient(rgba(10,17,23,.58),rgba(10,17,23,.4) 60%,rgba(10,17,23,0));
+  backdrop-filter:blur(12px) saturate(.9);-webkit-backdrop-filter:blur(12px) saturate(.9);
+  -webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent);
+  opacity:0;transition:opacity .2s cubic-bezier(.23,1,.32,1)}
+.top.scrolled{padding-block:14px}
 .top.scrolled::before{opacity:1}
 .mark{display:flex;align-items:center;gap:12px;text-decoration:none;white-space:nowrap}
 .mark svg{width:34px;height:34px;flex:none}
@@ -94,6 +93,8 @@ a{color:inherit}
 .btn:hover svg{transform:translateX(-3px)}
 .btn-solid{background:var(--silver);color:var(--ink)}
 .btn-solid:hover{background:#fff}
+.btn,.cta{transition:background .3s,color .3s,border-color .3s,transform .16s cubic-bezier(.23,1,.32,1)}
+.btn:active,.cta:active{transform:scale(.97)}
 
 /* ---------- Progress ruler ---------- */
 body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(64px + env(safe-area-inset-bottom,0px));z-index:35;pointer-events:none;background:linear-gradient(0deg,rgba(13,22,29,.9),rgba(13,22,29,.55) 55%,rgba(13,22,29,0))}
@@ -106,11 +107,12 @@ body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(64px +
 
 /* ---------- Rooms ---------- */
 main{position:relative;z-index:10;overflow-x:clip}
-.room{position:relative;padding-bottom:85vh}
-.room:last-child{padding-bottom:0;min-height:100vh}
-.room.hero-room{min-height:165vh;padding-bottom:0}
+.room{position:relative}
+.room + .room{scroll-margin-top:0}
+.room.hero-room{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center}
 .panel{position:relative;padding-block:112px 40px;padding-left:max(var(--gutter), env(safe-area-inset-left,0px));padding-right:max(var(--gutter), env(safe-area-inset-right,0px))}
-.panel.stick{position:sticky;top:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-block:96px 130px}
+.hero-room .panel{padding-block:120px 110px}
+.room + .room .panel{padding-top:clamp(96px,11vw,150px)}
 .panel-inner{width:100%;max-width:1360px;margin:0 auto}
 
 h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
@@ -129,7 +131,9 @@ h2{font-size:var(--t-h2);line-height:1.08}
 .stat span{display:block;margin-top:10px;font-size:.9375rem;color:var(--mist)}
 .hero-note{order:3;text-align:start;max-width:42ch;font-size:1.1875rem;opacity:.92}
 .hero h1{order:2;font-size:var(--t-hero);line-height:1.08;max-width:15ch}
-.hint{display:flex;align-items:center;gap:10px;margin-top:clamp(20px,4vh,36px);font-size:var(--t-small);color:var(--mist);width:fit-content}
+.hint{display:flex;align-items:center;gap:10px;margin-top:clamp(20px,4vh,36px);font-size:var(--t-small);color:var(--mist);width:fit-content;text-decoration:none;transition:color .2s ease}
+.hint:hover{color:var(--silver)}
+.about-h{margin-bottom:clamp(18px,3vh,28px)}
 .hint i{width:1px;height:28px;background:linear-gradient(var(--silver),transparent);animation:drop 2.4s var(--ease) infinite}
 @keyframes drop{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
@@ -245,6 +249,56 @@ select option{background:var(--steel-9)}
 .glass,.glass *{text-shadow:none}
 footer{margin-top:56px;padding-bottom:70px;color:var(--mist);font-size:var(--t-small);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
+
+/* ---------- Portrait ----------
+   A cut-out portrait stands in the open half of the opening screen, on the room's own light.
+   It arrives once on load, sliding in from its own side; the headline rises in just after it.
+   Nothing here reacts to scrolling. */
+.hero-room{overflow:hidden}
+.hero-room .panel{position:relative;z-index:2}
+.portrait{position:absolute;z-index:1;bottom:0;left:max(var(--gutter), env(safe-area-inset-left,0px));margin:0;
+  height:min(90vh,58vw,980px);aspect-ratio:3712/5508;pointer-events:none}
+/* a soft pool of shadow on the floor and behind the shoulders seats him in the room instead of on top of it */
+.portrait::before{content:"";position:absolute;inset:18% -22% -6%;z-index:-1;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(6,11,15,.62),rgba(6,11,15,0));filter:blur(18px)}
+.portrait img{display:block;width:100%;height:100%;max-width:none;object-fit:contain;object-position:bottom;
+  filter:brightness(.93) contrast(1.03) saturate(.94) drop-shadow(0 18px 40px rgba(4,8,11,.45));
+  -webkit-mask-image:linear-gradient(#000 74%,transparent 99%);mask-image:linear-gradient(#000 74%,transparent 99%)}
+
+/* entrance: once, on load */
+@keyframes portrait-in{from{opacity:0;transform:translateX(-56px)}40%{opacity:1}to{opacity:1;transform:none}}
+@keyframes rise-in{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.portrait{animation:portrait-in 1.15s cubic-bezier(.23,1,.32,1) .2s both}
+.hero > *{animation:rise-in .9s cubic-bezier(.23,1,.32,1) both}
+.hero .stats{animation-delay:.45s}
+.hero h1{animation-delay:.55s}
+.hero .hero-note{animation-delay:.65s}
+.hero-room .hint{animation:rise-in .9s cubic-bezier(.23,1,.32,1) .8s both}
+@media (prefers-reduced-motion:reduce){
+  @keyframes portrait-in{from{opacity:0}to{opacity:1}}
+  @keyframes rise-in{from{opacity:0}to{opacity:1}}
+  .portrait,.hero > *,.hero-room .hint{animation-duration:.4s}
+}
+
+/* larger screens: the portrait is set bigger and cropped at the thigh by the bottom of the screen,
+   so he fills the open half without rising any higher than before */
+@media (min-width:701px){
+  .portrait{--ph:min(90vh,58vw,980px);height:calc(var(--ph) * 1.18);bottom:calc(var(--ph) * -.18)}
+  .portrait img{-webkit-mask-image:linear-gradient(#000 64%,transparent 84%);mask-image:linear-gradient(#000 64%,transparent 84%)}
+}
+/* tablets: the portrait gets smaller and the headline keeps to the other half */
+@media (max-width:1100px) and (min-width:701px){
+  .portrait{--ph:min(80vh,54vw)}
+  .hero{max-width:56%}
+}
+/* phones: the portrait stands under the headline, flush with the bottom of the opening screen */
+@media (max-width:700px){
+  .hero-room{min-height:0}
+  .hero-room .panel{padding-bottom:12px}
+  .portrait{position:relative;inset:auto;height:auto;width:min(78vw,460px);margin:8px auto 0}
+  .portrait::before{inset:22% -18% -4%}
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width:1180px){
   .nav{display:none}
@@ -260,9 +314,6 @@ footer{margin-top:56px;padding-bottom:70px;color:var(--mist);font-size:var(--t-s
   .practice > li:nth-child(2n){border-inline-end:0}
   .practice > li:nth-last-child(-n+2){border-bottom:0}
   .timeline{grid-template-columns:1fr}
-  .panel.stick{position:relative;padding-block:110px 60px}
-  .room.hero-room{min-height:130vh}
-  .room{padding-bottom:70vh}
   .cases li{grid-template-columns:1fr;gap:8px}
   .tag{text-align:start}
   .veil{background:linear-gradient(0deg, rgba(10,17,23,.86) 0%, rgba(10,17,23,.5) 55%, rgba(10,17,23,.6) 100%)}
@@ -281,11 +332,11 @@ footer{margin-top:56px;padding-bottom:70px;color:var(--mist);font-size:var(--t-s
   /* phones: type and spacing sized for a phone screen, one scale for every section */
   :root{--t-hero:2.6rem;--t-h2:2.05rem;--t-lead:1.1875rem;--t-small:.875rem}
   body{font-size:1rem;line-height:1.6}
-  .room{padding-bottom:45vh}
-  .room.hero-room{min-height:110vh}
-  .panel,.panel.stick{padding-block:96px 56px}
+  .panel{padding-block:72px 40px}
+  .room + .room .panel{padding-top:80px}
   /* opening screen starts right under the header instead of floating mid-screen */
-  .hero-room .panel.stick{justify-content:flex-start;padding-top:112px}
+  .room.hero-room{min-height:0;justify-content:flex-start}
+  .hero-room .panel{padding-block:112px 8px}
   .block + .block{margin-top:60px}
   .hero{gap:22px;width:100%}
   .hero h1{max-width:none}
@@ -333,4 +384,54 @@ footer{margin-top:56px;padding-bottom:70px;color:var(--mist);font-size:var(--t-s
   html{scroll-behavior:auto}
   .scene img,.sheen,.hint i{animation:none}
   .world{transition:none}
+}
+
+/* ---------- Polish pass ----------
+   One reading system for the whole page: three text sizes below the headings, one secondary colour,
+   one rhythm between a heading and what follows it, and enough shade under every line that it reads
+   the same over the dark shelves and over the bright window. */
+:root{
+  --mist:#c9d5de;              /* secondary text, lifted a step so it holds 4.5:1 over the window too */
+  --t-2nd:.96875rem;           /* every secondary line: descriptions, captions, intros */
+  --gap-head:clamp(14px,2vh,18px); /* heading → its first line, everywhere */
+}
+/* the window side of the room is the brightest part of the photo: a deeper, even scrim there
+   keeps text on both sides at the same contrast */
+.veil{background:
+    linear-gradient(to left, rgba(10,17,23,.84) 0%, rgba(10,17,23,.6) 42%, rgba(10,17,23,.46) 72%, rgba(10,17,23,.56) 100%),
+    linear-gradient(0deg, rgba(10,17,23,.85) 0%, rgba(10,17,23,0) 40%),
+    linear-gradient(180deg, rgba(10,17,23,.6) 0%, rgba(10,17,23,0) 20%)}
+
+/* section intros sit under their heading on the same edge, instead of stranded on the far side */
+.sec-head{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:var(--gap-head);margin-bottom:clamp(28px,4.5vh,44px)}
+.sec-head > p{max-width:60ch;font-size:1.0625rem;line-height:1.6}
+.about-h{margin-bottom:var(--gap-head)}
+.contact .lead{margin-top:var(--gap-head)}
+
+/* one size and leading for all secondary lines */
+.practice .one,.person p.desc,.team .person p.desc,.clients p,.timeline p,.about .lead + p{font-size:var(--t-2nd);line-height:1.6}
+.cases p{opacity:1;font-size:1rem;line-height:1.6}
+.note,.details dt,label,.form-foot small,.figures dt small,.stat span,.hint{font-size:.875rem}
+.deg{font-size:.8125rem}
+
+/* every item heading in the same serif voice */
+.clients h3{font:400 clamp(1.2rem,1.4vw,1.35rem)/1.25 var(--f-display);margin-bottom:8px}
+
+/* the practice list is not a sequence, so it loses the 01–06 counters (impeccable / taste) */
+.practice .idx{display:none}
+.practice > li{grid-row:span 2;row-gap:8px}
+
+/* equal steps between a title and its lines inside every item */
+.role{margin-top:6px}
+.person p.desc{margin-top:10px}
+.timeline b{margin-bottom:10px}
+
+/* shade under text: a touch deeper, so small lines read cleanly over the photo */
+.hero::before,.about > div:first-child::before,.figures::after,.sec-head::before,.timeline::after,.practice::after,.team-lead::before,.team::before,.clients::before,.cases::before,.note::before,.contact > div:first-child::before,footer::before,.hint::before{--shade:.6}
+.practice::after,.team::before,.team-lead::before,.clients::before,.cases::before{--shade:.64}
+
+/* text selection and focus follow the palette, not the browser default */
+::selection{background:rgba(195,170,124,.4);color:#fff}
+@media (max-width:900px){
+  .veil{background:linear-gradient(0deg, rgba(10,17,23,.86) 0%, rgba(10,17,23,.58) 55%, rgba(10,17,23,.64) 100%)}
 }

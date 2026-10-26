@@ -2,135 +2,68 @@
 document.documentElement.lang = 'he';
 document.documentElement.dir = 'rtl';
 
-const ROOMS = [
-  { img: 'office', dim: .06, fx: .70, fy: .42, name: 'המשרד' },
-  { img: 'conference', dim: .16, fx: .53, fy: .44, name: 'חדר הישיבות' },
-  { img: 'meeting', dim: .24, fx: .78, fy: .40, name: 'חדר הצוות' },
-  { img: 'desk', dim: .26, fx: .45, fy: .55, name: 'שולחן התיקים' },
-  { img: 'reception', dim: .16, fx: .58, fy: .44, name: 'הקבלה' }
-];
-const IW = 2752, IH = 1536;
+// one office photograph stays behind every section; scrolling moves the content, never the room
+const SECTIONS = { home: 'ראשי', practice: 'תחומי עיסוק', about: 'אודות', team: 'הצוות', precedents: 'תקדימים', contact: 'צור קשר' };
 const world = document.getElementById('world');
-const scenes = ROOMS.map((r, i) => {
-  const el = document.createElement('div');
-  el.className = 'scene';
-  el.innerHTML = `<img src="assets/img/${r.img}.jpg" srcset="assets/img/${r.img}-sm.jpg 1280w, assets/img/${r.img}.jpg 2400w" sizes="100vw" alt="" decoding="async" ${i < 2 ? 'fetchpriority="high"' : ''} style="object-position:${r.fx * 100}% ${r.fy * 100}%">`;
-  world.appendChild(el);
-  return el;
-});
-const frame = document.getElementById('door');
-let focal = [], dims;
-function measure() {
-  const W = world.clientWidth, H = world.clientHeight, s = Math.max(W / IW, H / IH), dw = IW * s, dh = IH * s;
-  focal = ROOMS.map(r => [(W - dw) * r.fx + r.fx * dw, (H - dh) * r.fy + r.fy * dh]);
-  dims = { W, H };
-}
-measure();
-addEventListener('resize', measure);
+const scene = document.createElement('div');
+scene.className = 'scene';
+scene.innerHTML = '<img src="assets/img/office.jpg" srcset="assets/img/office-sm.jpg 1280w, assets/img/office.jpg 2400w" sizes="100vw" alt="" decoding="async" fetchpriority="high" style="object-position:70% 42%">';
+world.appendChild(scene);
 
-const rooms = [...document.querySelectorAll('.room')];
-const panels = rooms.map(r => r.querySelector('.panel'));
 const navLinks = [...document.querySelectorAll('.nav [data-a]')];
 const anchors = navLinks.map(a => document.getElementById(a.dataset.a));
 const where = document.getElementById('where');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-const CREEP = .07, DRIFT = .06;
+const topbar = document.querySelector('.top');
 
 const tA = document.getElementById('ticksA'), tB = document.getElementById('ticksB');
 for (let i = 0; i < 24; i++) { tA.appendChild(document.createElement('i')); tB.appendChild(document.createElement('i')); }
 const ticks = [...tA.children, ...tB.children];
 
-function targetCam() {
-  const y = scrollY, vh = innerHeight;
-  for (let i = 0; i < rooms.length; i++) {
-    const top = rooms[i].offsetTop, h = rooms[i].offsetHeight;
-    if (i === rooms.length - 1) return i;
-    if (y < top + h) {
-      const dwell = Math.max(1, h - vh), local = y - top;
-      if (local <= dwell) return i + CREEP * Math.max(0, local) / dwell;
-      return i + CREEP + (1 - CREEP) * Math.min(1, (local - dwell) / vh);
-    }
-  }
-  return rooms.length - 1;
-}
-
-let cam = targetCam(), shown = -1, shownA = '';
-const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-function render() {
-  const i = Math.min(Math.floor(cam), scenes.length - 1), t = cam - i;
-  const lean = Math.min(t, CREEP) / CREEP;
-  const tt = ease(Math.max(0, (t - CREEP) / (1 - CREEP)));
-  const { W, H } = dims;
-  const [fx, fy] = focal[i] || [W / 2, H / 2];
-  const bw = Math.max(110, W * .14), bh = H * .38;
-  const need = Math.max(Math.max(fx, W - fx) / (bw / 2), Math.max(fy, H - fy) / (bh / 2)) * 1.02;
-  const S = Math.pow(need, tt);
-  const L = Math.max(0, fx - bw / 2 * S), R = Math.max(0, W - (fx + bw / 2 * S)), T = Math.max(0, fy - bh / 2 * S), B = Math.max(0, H - (fy + bh / 2 * S));
-  const rad = Math.max(0, 18 * (1 - tt * 1.4));
-  scenes.forEach((el, j) => {
-    let vis = false;
-    if (j === i) {
-      vis = true;
-      const s = reduce.matches ? 1 : (1 + DRIFT * lean) * Math.pow(S, .32);
-      el.style.zIndex = 1; el.style.transformOrigin = `${fx}px ${fy}px`;
-      el.style.transform = `scale(${s.toFixed(4)})`; el.style.clipPath = 'none'; el.style.opacity = 1;
-      el.style.setProperty('--dim', Math.min(.8, ROOMS[j].dim + tt * .55).toFixed(3));
-    } else if (j === i + 1 && tt > 0) {
-      vis = true;
-      el.style.zIndex = 2; el.style.transform = 'none'; el.style.setProperty('--dim', ROOMS[j].dim);
-      if (reduce.matches) { el.style.clipPath = 'none'; el.style.opacity = tt.toFixed(3); }
-      else { el.style.clipPath = `inset(${T.toFixed(1)}px ${R.toFixed(1)}px ${B.toFixed(1)}px ${L.toFixed(1)}px round ${rad.toFixed(1)}px)`; el.style.opacity = Math.min(1, tt * 8).toFixed(3); }
-    }
-    el.style.visibility = vis ? 'visible' : 'hidden';
-  });
-  if (!reduce.matches && tt > 0 && tt < 1) {
-    frame.style.opacity = (Math.min(1, tt * 8) * (1 - tt)).toFixed(3);
-    frame.style.left = L + 'px'; frame.style.top = T + 'px';
-    frame.style.width = (W - L - R) + 'px'; frame.style.height = (H - T - B) + 'px';
-    frame.style.borderRadius = rad + 'px';
-  } else frame.style.opacity = 0;
-
-  panels.forEach((p, j) => {
-    const d = cam - j;
-    // full clarity holds a little longer on each side of the room's peak moment, then fades as before
-    const o = d >= 0 ? 1 - Math.max(0, (d - CREEP) / (1 - CREEP) - .14) * 1.9 : 1 + Math.min(0, d + .12) * 1.9;
-    p.style.opacity = Math.max(0, Math.min(1, o)).toFixed(3);
-  });
-  const near = Math.min(rooms.length - 1, Math.round(cam - CREEP / 2));
-  if (near !== shown) {
-    shown = near;
-    where.textContent = ROOMS[near].name;
-  }
+let shown = '', lit = -1, queued = false;
+function update() {
+  queued = false;
+  topbar.classList.toggle('scrolled', scrollY > 40);
   const probe = scrollY + innerHeight * .4;
   let act = anchors[0].id;
-  anchors.forEach(el => { if (el && el.getBoundingClientRect().top + scrollY <= probe) act = el.id; });
-  if (act !== shownA) { shownA = act; navLinks.forEach(a => a.classList.toggle('on', a.dataset.a === act)); }
-  const lit = Math.round(cam / (rooms.length - 1) * ticks.length);
-  ticks.forEach((tk, k) => tk.classList.toggle('lit', k < lit));
-}
-
-/* text that scrolls up toward the header fades out before it reaches it, so the two never overlap */
-const fadeEls = [...document.querySelectorAll('.about > div:first-child, .figures > div, .timeline li, .sec-head, .practice > li, .team-lead > .person, .team > li, .clients > li, .cases > li, .note, .contact > div:first-child > *, form.glass, footer')];
-function fadeNearTop() {
-  const edge = topbar.offsetHeight + 8;
-  for (const el of fadeEls) {
-    const t = el.getBoundingClientRect().top;
-    const o = Math.max(0, Math.min(1, (t - edge + 70) / 90));
-    el.style.opacity = o < 1 ? o.toFixed(3) : '';
+  anchors.forEach(el => { if (el.getBoundingClientRect().top + scrollY <= probe) act = el.id; });
+  if (act !== shown) {
+    shown = act;
+    where.textContent = SECTIONS[act];
+    navLinks.forEach(a => a.classList.toggle('on', a.dataset.a === act));
   }
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const n = Math.round((max > 0 ? scrollY / max : 0) * ticks.length);
+  if (n !== lit) { lit = n; ticks.forEach((tk, k) => tk.classList.toggle('lit', k < n)); }
 }
-const topbar = document.querySelector('.top');
-function loop() {
-  topbar.classList.toggle('scrolled', scrollY > 40);
-  fadeNearTop();
-  const target = targetCam();
-  cam += (target - cam) * (reduce.matches ? 1 : .09);
-  if (Math.abs(target - cam) < .0005) cam = target;
-  render();
-  requestAnimationFrame(loop);
+addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+addEventListener('resize', update);
+update();
+
+// the portrait stands centred in the open space between the page's left edge and the headline
+const portrait = document.querySelector('.portrait');
+const heroInner = document.querySelector('.hero-room .panel-inner');
+const heroText = [...document.querySelectorAll('.hero, .hero-room .hint')];
+function placePortrait() {
+  if (!portrait) return;
+  if (getComputedStyle(portrait).position !== 'absolute') { portrait.style.left = ''; return; }
+  const edge = heroInner.getBoundingClientRect().left;
+  // measure where the words actually start, not the edges of their boxes
+  let textLeft = Infinity;
+  for (const el of heroText) {
+    const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let n; (n = walk.nextNode());) {
+      if (!n.textContent.trim()) continue;
+      const r = document.createRange(); r.selectNodeContents(n);
+      for (const box of r.getClientRects()) textLeft = Math.min(textLeft, box.left);
+    }
+  }
+  const w = portrait.getBoundingClientRect().width;
+  portrait.style.left = Math.max(edge, (edge + textLeft) / 2 - w / 2) + 'px';
 }
-render();
-requestAnimationFrame(loop);
+placePortrait();
+addEventListener('resize', placePortrait);
+document.fonts && document.fonts.ready.then(placePortrait);
 
 const fine = matchMedia('(pointer: fine)');
 addEventListener('pointermove', e => {
