@@ -260,9 +260,11 @@ footer{margin-top:56px;padding-bottom:70px;color:var(--mist);font-size:var(--t-s
   height:min(90vh,58vw,980px);aspect-ratio:3712/5508;pointer-events:none}
 /* a soft pool of shadow on the floor and behind the shoulders seats him in the room instead of on top of it */
 .portrait::before{content:"";position:absolute;inset:18% -22% -6%;z-index:-1;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(6,11,15,.62),rgba(6,11,15,0));filter:blur(18px)}
+  background:radial-gradient(closest-side,rgba(6,11,15,.62),rgba(6,11,15,0));filter:blur(18px);transform:translateX(6%)}
 .portrait img{display:block;width:100%;height:100%;max-width:none;object-fit:contain;object-position:bottom;
-  filter:brightness(.93) contrast(1.03) saturate(.94) drop-shadow(0 18px 40px rgba(4,8,11,.45));
+  /* the room's light is baked into the photo (cooler, dimmer, window light on the left edge);
+     the shadow falls away from the window instead of ringing the whole outline */
+  filter:drop-shadow(16px 12px 38px rgba(4,8,11,.42));
   -webkit-mask-image:linear-gradient(#000 74%,transparent 99%);mask-image:linear-gradient(#000 74%,transparent 99%)}
 
 /* entrance: once, on load */
@@ -435,3 +437,61 @@ footer{margin-top:56px;padding-bottom:70px;color:var(--mist);font-size:var(--t-s
 @media (max-width:900px){
   .veil{background:linear-gradient(0deg, rgba(10,17,23,.86) 0%, rgba(10,17,23,.58) 55%, rgba(10,17,23,.64) 100%)}
 }
+
+/* ---------- Gold ----------
+   Gold is structure, never content: every line, rule and marker of place is gold;
+   every word and number stays silver. One width (56px) and one gap for every rule under a title. */
+:root{
+  --gold:#c9a45c;
+  --gold-text:#d8bd85;
+  --line:rgba(201,164,92,.28);
+  --brass:var(--gold);
+  --brass-text:var(--gold-text);
+  --rule-w:56px;
+}
+/* the brand mark */
+.mark svg{color:var(--gold)}
+/* every title, the opening headline included, is signed with the same short rule */
+.hero h1::after,.sec-head h2::after,.about-h::after,.contact h2::after{content:"";display:block;width:var(--rule-w);height:1px;margin-top:20px;background:var(--gold)}
+/* the two opening figures stand on matching gold rules */
+.stats{display:grid;grid-template-columns:1fr 1fr;width:fit-content}
+.stat{padding-top:16px;border-top:1px solid var(--gold)}
+/* the figures start on the same right edge as their labels and rules */
+.stat b{text-align:right}
+/* the timeline and the senior partners: the same accent segment / full line */
+.timeline li::before{width:var(--rule-w)}
+.team-lead .person{border-top-color:var(--gold)}
+/* place: current menu item, the header link, the scroll hint (the bottom ruler stays silver) */
+.nav a::after{background:var(--gold)}
+.cta{background-image:linear-gradient(var(--gold),var(--gold))}
+.cta:hover{color:#fff;background-image:linear-gradient(#e3c98f,#e3c98f)}
+.hint i{background:linear-gradient(var(--gold),transparent)}
+/* contact: a gold-edged button that fills on hover */
+.btn-solid{background:transparent;color:var(--silver);border-color:var(--gold)}
+.btn-solid:hover{background:var(--gold);color:var(--ink)}
+footer{border-top:1px solid var(--line);padding-top:20px}
+::selection{background:rgba(201,164,92,.42);color:#fff}
+
+/* ---------- Opening screen reading order ----------
+   who we are (a small line) → the promise (headline) → what we do (one sentence) → the proof (figures). */
+.hero-kicker{order:0;margin:0 0 -4px;font-size:.9375rem;letter-spacing:.02em;color:var(--mist)}
+.hero-kicker::before{background:var(--gold);width:var(--rule-w)}
+.hero h1{order:1}
+.hero-note{order:2}
+.hero .stats{order:3;margin:8px 0 0;column-gap:clamp(28px,4vw,56px)}
+.hero .stat b{font-size:clamp(1.9rem,min(3vw,4.6vh),2.6rem)}
+.hero .stat span{margin-top:8px}
+.hero .hero-kicker{animation-delay:.4s}
+.hero h1{animation-delay:.5s}
+.hero .hero-note{animation-delay:.6s}
+.hero .stats{animation-delay:.7s}
+@media (max-width:700px){.hero .stat b{font-size:2.1rem}}
+.hero-note{text-wrap:balance}
+
+/* About, reached from the menu: it lands below the header, and the three figures are a little tighter so the whole part fits one screen */
+#about{scroll-margin-top:clamp(92px,13vh,124px)}
+.figures > div{padding:14px 0}
+.figures dd{font-size:clamp(2.2rem,3.2vw,2.8rem)}
+.figures dd.word{font-size:1.9rem}
+
+@media (max-width:400px){.hero-kicker{font-size:.84375rem;gap:10px}.hero-kicker::before{width:32px;flex:none}}
