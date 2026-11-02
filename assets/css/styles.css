@@ -536,3 +536,6 @@ footer{border-top:1px solid var(--line);padding-top:20px}
 .figures > div:hover::after,.timeline li:hover::after,.person:hover::after,.clients li:hover::after,.cases li:hover::after,.details > div:hover::after,
 .details > div:focus-within::after{transform:scaleX(1)}
 @media (prefers-reduced-motion:reduce){.figures > div::after,.timeline li::after,.person::after,.clients li::after,.cases li::after,.details > div::after{transition:none}}
+/* the headline takes a little more of the opening screen */
+.hero h1{font-size:clamp(2.6rem,min(5.8vw,9.2vh),5.6rem);max-width:16ch}
+@media (max-width:600px){.hero h1{font-size:2.85rem}}
