@@ -536,3 +536,7 @@ footer{border-top:1px solid var(--line);padding-top:20px}
 .figures > div:hover::after,.timeline li:hover::after,.person:hover::after,.clients li:hover::after,.cases li:hover::after,.details > div:hover::after,
 .details > div:focus-within::after{transform:scaleX(1)}
 @media (prefers-reduced-motion:reduce){.figures > div::after,.timeline li::after,.person::after,.clients li::after,.cases li::after,.details > div::after{transition:none}}
+/* precedents: the row is framed, so the gold draws in on its bottom line too */
+.cases li::before{content:"";position:absolute;bottom:-1px;inset-inline:0;height:1px;background:var(--brass);transform:scaleX(0);transform-origin:right;transition:transform .7s var(--ease);pointer-events:none}
+.cases li:hover::before{transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){.cases li::before{transition:none}}
