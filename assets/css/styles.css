@@ -528,3 +528,27 @@ footer{border-top:1px solid var(--line);padding-top:20px}
 .practice[data-layout="c"] > li:last-child{border-bottom:0}
 .practice[data-layout="c"] .one{max-width:none}
 @media (max-width:600px){.practice[data-layout="c"] > li,.practice[data-layout="c"] > li:nth-child(n){grid-template-columns:1fr;row-gap:8px}}
+
+/* Five team members / five client groups on narrower screens: two balanced treatments, picked by data-five on <main> */
+/* x: the short last row is centred under the full one */
+@media (min-width:901px) and (max-width:1180px){
+  [data-five="x"] .team,[data-five="x"] .clients{grid-template-columns:repeat(6,minmax(0,1fr))}
+  [data-five="x"] .team > li,[data-five="x"] .clients > li{grid-column:span 2}
+  [data-five="x"] .team > li:nth-child(4),[data-five="x"] .clients > li:nth-child(4){grid-column:2/span 2}
+}
+@media (min-width:601px) and (max-width:900px){
+  [data-five="x"] .clients{grid-template-columns:repeat(6,minmax(0,1fr))}
+  [data-five="x"] .clients > li{grid-column:span 2}
+  [data-five="x"] .clients > li:nth-child(4){grid-column:2/span 2}
+  [data-five="x"] .team{grid-template-columns:repeat(4,minmax(0,1fr))}
+  [data-five="x"] .team > li{grid-column:span 2}
+  [data-five="x"] .team > li:nth-child(5){grid-column:2/span 2}
+}
+/* y: where five no longer fit in one row, both become ruled lists, name on the right and the line beside it */
+@media (min-width:601px) and (max-width:1180px){
+  [data-five="y"] .team,[data-five="y"] .clients{grid-template-columns:1fr;row-gap:0}
+  [data-five="y"] .team > li,[data-five="y"] .clients > li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) auto;column-gap:clamp(20px,3.5vw,48px);align-items:baseline;padding:18px 0}
+  [data-five="y"] .team > li:last-child,[data-five="y"] .clients > li:last-child{border-bottom:1px solid var(--line)}
+  [data-five="y"] .team .person p.desc{margin-top:0}
+  [data-five="y"] .clients h3{margin-bottom:0}
+}
