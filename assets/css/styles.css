@@ -497,40 +497,23 @@ footer{border-top:1px solid var(--line);padding-top:20px}
 @media (max-width:400px){.hero-kicker{font-size:.84375rem;gap:10px}.hero-kicker::before{width:32px;flex:none}}
 
 
-/* Seven practice areas: three balanced layouts, picked by data-layout on the list */
+/* Seven practice areas: four over three, both rows run the full width */
 @media (min-width:901px){
-  .practice[data-layout] > li{border-bottom:0;border-inline-end:0}
-  /* a: four over three, both rows run the full width */
   .practice[data-layout="a"]{grid-template-columns:repeat(12,minmax(0,1fr))}
-  .practice[data-layout="a"] > li{grid-column:span 3}
+  .practice[data-layout="a"] > li{grid-column:span 3;border-bottom:0;border-inline-end:0}
   .practice[data-layout="a"] > li:nth-child(n+5){grid-column:span 4}
   .practice[data-layout="a"] > li:nth-child(-n+4){border-bottom:1px solid var(--line)}
   .practice[data-layout="a"] > li:not(:nth-child(4)):not(:nth-child(7)){border-inline-end:1px solid var(--line)}
-  /* b: the core practice leads across the width, six follow in a 3x2 grid */
-  .practice[data-layout="b"] > li:first-child{grid-column:1/-1}
-  .practice[data-layout="b"] > li:nth-child(-n+4){border-bottom:1px solid var(--line)}
-  .practice[data-layout="b"] > li:nth-child(2),.practice[data-layout="b"] > li:nth-child(3),
-  .practice[data-layout="b"] > li:nth-child(5),.practice[data-layout="b"] > li:nth-child(6){border-inline-end:1px solid var(--line)}
 }
+/* tablet: the first area runs the full width, six follow in pairs */
 @media (min-width:601px) and (max-width:900px){
-  .practice[data-layout="a"] > li,.practice[data-layout="b"] > li{border-bottom:0;border-inline-end:0}
-  .practice[data-layout="a"] > li:first-child,.practice[data-layout="b"] > li:first-child{grid-column:1/-1}
-  .practice[data-layout="a"] > li:nth-child(-n+5),.practice[data-layout="b"] > li:nth-child(-n+5){border-bottom:1px solid var(--line)}
-  .practice[data-layout="a"] > li:nth-child(2n),.practice[data-layout="b"] > li:nth-child(2n){border-inline-end:1px solid var(--line)}
+  .practice[data-layout="a"] > li{border-bottom:0;border-inline-end:0}
+  .practice[data-layout="a"] > li:first-child{grid-column:1/-1}
+  .practice[data-layout="a"] > li:nth-child(-n+5){border-bottom:1px solid var(--line)}
+  .practice[data-layout="a"] > li:nth-child(2n){border-inline-end:1px solid var(--line)}
 }
-.practice[data-layout="b"] > li:first-child h3{font-size:clamp(1.55rem,2.2vw,2.1rem)}
-.practice[data-layout="b"] > li:first-child .one{max-width:60ch;font-size:1.0625rem}
-@media (min-width:901px){.practice[data-layout="b"] > li:first-child{padding-block:30px 34px}}
-/* c: a ruled index, title on the right and its line beside it */
-.practice[data-layout="c"]{grid-template-columns:1fr}
-.practice[data-layout="c"] > li,.practice[data-layout="c"] > li:nth-child(n){grid-row:auto;grid-template-rows:none;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);column-gap:clamp(24px,4vw,64px);align-items:baseline;
-  padding:20px 0;border-inline-end:0;border-bottom:1px solid var(--line)}
-.practice[data-layout="c"] > li:last-child{border-bottom:0}
-.practice[data-layout="c"] .one{max-width:none}
-@media (max-width:600px){.practice[data-layout="c"] > li,.practice[data-layout="c"] > li:nth-child(n){grid-template-columns:1fr;row-gap:8px}}
 
-/* Five team members / five client groups on narrower screens: two balanced treatments, picked by data-five on <main> */
-/* x: the short last row is centred under the full one */
+/* Five team members / five client groups on narrower screens: the short last row is centred under the full one */
 @media (min-width:901px) and (max-width:1180px){
   [data-five="x"] .team,[data-five="x"] .clients{grid-template-columns:repeat(6,minmax(0,1fr))}
   [data-five="x"] .team > li,[data-five="x"] .clients > li{grid-column:span 2}
@@ -544,11 +527,12 @@ footer{border-top:1px solid var(--line);padding-top:20px}
   [data-five="x"] .team > li{grid-column:span 2}
   [data-five="x"] .team > li:nth-child(5){grid-column:2/span 2}
 }
-/* y: where five no longer fit in one row, both become ruled lists, name on the right and the line beside it */
-@media (min-width:601px) and (max-width:1180px){
-  [data-five="y"] .team,[data-five="y"] .clients{grid-template-columns:1fr;row-gap:0}
-  [data-five="y"] .team > li,[data-five="y"] .clients > li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) auto;column-gap:clamp(20px,3.5vw,48px);align-items:baseline;padding:18px 0}
-  [data-five="y"] .team > li:last-child,[data-five="y"] .clients > li:last-child{border-bottom:1px solid var(--line)}
-  [data-five="y"] .team .person p.desc{margin-top:0}
-  [data-five="y"] .clients h3{margin-bottom:0}
-}
+
+/* the gold line over an item draws in on hover, everywhere the site has items on a hairline (as in the practice grid) */
+.figures > div,.timeline li,.person,.clients li,.cases li,.details > div{position:relative}
+.figures > div::after,.timeline li::after,.person::after,.clients li::after,.cases li::after,.details > div::after{
+  content:"";position:absolute;top:-1px;inset-inline:0;height:1px;background:var(--brass);transform:scaleX(0);transform-origin:right;transition:transform .7s var(--ease);pointer-events:none}
+.details > div::after{top:-8px}
+.figures > div:hover::after,.timeline li:hover::after,.person:hover::after,.clients li:hover::after,.cases li:hover::after,.details > div:hover::after,
+.details > div:focus-within::after{transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){.figures > div::after,.timeline li::after,.person::after,.clients li::after,.cases li::after,.details > div::after{transition:none}}
