@@ -495,3 +495,9 @@ footer{border-top:1px solid var(--line);padding-top:20px}
 .figures dd.word{font-size:1.9rem}
 
 @media (max-width:400px){.hero-kicker{font-size:.84375rem;gap:10px}.hero-kicker::before{width:32px;flex:none}}
+
+/* Seven practice areas: rows 1-2 stay a 3x2 grid, the seventh closes it as a full-width row */
+.practice > li:nth-child(n+4):nth-child(-n+6){border-bottom:1px solid var(--line)}
+.practice > li:last-child:nth-child(7){grid-column:1/-1;border-inline-end:0;border-bottom:0}
+@media (max-width:900px){.practice > li:nth-child(5),.practice > li:nth-child(6){border-bottom:1px solid var(--line)}}
+@media (max-width:600px){.practice > li:last-child:nth-child(7){border-bottom:0}}
