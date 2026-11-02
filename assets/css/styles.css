@@ -536,6 +536,3 @@ footer{border-top:1px solid var(--line);padding-top:20px}
 .figures > div:hover::after,.timeline li:hover::after,.person:hover::after,.clients li:hover::after,.cases li:hover::after,.details > div:hover::after,
 .details > div:focus-within::after{transform:scaleX(1)}
 @media (prefers-reduced-motion:reduce){.figures > div::after,.timeline li::after,.person::after,.clients li::after,.cases li::after,.details > div::after{transition:none}}
-/* the line above the headline carries more weight now that it names the firm's three decades */
-.hero-kicker{font-size:clamp(1.125rem,1.5vw,1.4375rem);color:var(--silver);margin-bottom:2px}
-@media (max-width:600px){.hero-kicker{font-size:1.0625rem;align-items:flex-start;text-wrap:balance}.hero-kicker::before{width:32px;flex:none;margin-top:.7em}}
